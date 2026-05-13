@@ -1,0 +1,2006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SciDay2026 – Scientific Day on Immunology and Cancer Research</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+:root{
+  --deep:#0B1A2F;
+  --mid:#132B40;
+  --accent:#C9A84C;
+  --accent2:#E6C97B;
+  --cyan:#00D4FF;
+  --white:#F4F7FB;
+  --muted:#8BA3BC;
+  --danger:#E05555;
+  --success:#3EC97B;
+  --glass:rgba(19,43,64,0.72);
+  --border:rgba(201,168,76,0.25);
+  --radius:14px;
+  --transition:0.35s cubic-bezier(.4,0,.2,1);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--deep);color:var(--white);font-family:'DM Sans',sans-serif;overflow-x:hidden;line-height:1.7;}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:var(--deep);}
+::-webkit-scrollbar-thumb{background:var(--accent);}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  background:rgba(11,26,47,0.95);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 2.5rem;height:64px;
+}
+.nav-brand{font-family:'Playfair Display',serif;font-size:1.35rem;color:var(--accent);letter-spacing:1px;cursor:pointer;}
+.nav-links{display:flex;gap:0.25rem;list-style:none;}
+.nav-links li a{
+  display:block;padding:0.4rem 0.9rem;border-radius:8px;
+  color:var(--muted);font-size:0.85rem;font-weight:500;text-decoration:none;letter-spacing:0.5px;
+  transition:var(--transition);
+}
+.nav-links li a:hover,.nav-links li a.active{color:var(--accent);background:rgba(201,168,76,0.1);}
+.nav-toggle{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:5px;}
+.nav-toggle span{width:26px;height:2px;background:var(--accent);border-radius:2px;transition:var(--transition);}
+
+/* ── PAGES ── */
+.page{display:none;min-height:100vh;}
+.page.active{display:block;}
+
+/* ── CANVAS BG ── */
+#hero-canvas{position:absolute;inset:0;z-index:0;pointer-events:none;}
+
+/* ── HERO ── */
+#hero{
+  position:relative;min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;overflow:hidden;padding-top:64px;
+}
+.hero-content{position:relative;z-index:2;max-width:860px;padding:2rem;}
+.hero-badge{
+  display:inline-block;padding:0.35rem 1.1rem;
+  background:rgba(201,168,76,0.12);border:1px solid var(--border);
+  border-radius:50px;font-size:0.8rem;color:var(--accent);letter-spacing:1.5px;
+  text-transform:uppercase;margin-bottom:1.5rem;
+}
+.hero-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(3.5rem,8vw,7rem);font-weight:900;
+  line-height:1;letter-spacing:-2px;
+  background:linear-gradient(135deg,#fff 30%,var(--accent));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:0.5rem;
+}
+.hero-sub{font-size:1.1rem;color:var(--muted);margin-bottom:1.5rem;letter-spacing:1px;}
+.hero-question{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1.1rem,2.5vw,1.6rem);
+  color:var(--white);line-height:1.45;
+  border-left:3px solid var(--accent);
+  padding-left:1.2rem;text-align:left;margin:0 auto 1.5rem;
+  max-width:650px;
+}
+.hero-meta{color:var(--muted);font-size:0.9rem;margin-bottom:0.5rem;}
+.hero-meta strong{color:var(--accent2);}
+.hero-author{font-size:0.95rem;color:var(--accent);font-weight:600;margin-bottom:2rem;}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;}
+.btn{
+  padding:0.75rem 1.8rem;border-radius:50px;font-size:0.9rem;font-weight:600;
+  cursor:pointer;border:none;text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;
+  transition:var(--transition);letter-spacing:0.5px;
+}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:var(--deep);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(201,168,76,0.45);}
+.btn-outline{background:transparent;border:1.5px solid var(--accent);color:var(--accent);}
+.btn-outline:hover{background:rgba(201,168,76,0.12);transform:translateY(-2px);}
+.btn-cyan{background:linear-gradient(135deg,#00b4d8,var(--cyan));color:var(--deep);}
+.btn-cyan:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,212,255,0.4);}
+
+/* ── SECTION COMMONS ── */
+section{padding:5rem 2rem;}
+.container{max-width:1100px;margin:0 auto;}
+.section-label{
+  display:inline-block;font-size:0.75rem;color:var(--accent);
+  letter-spacing:2.5px;text-transform:uppercase;margin-bottom:0.75rem;
+}
+.section-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;
+  line-height:1.25;margin-bottom:1.2rem;
+}
+.section-title span{color:var(--accent);}
+.section-desc{color:var(--muted);max-width:600px;font-size:1rem;}
+.divider{width:60px;height:3px;background:linear-gradient(90deg,var(--accent),transparent);margin:1.2rem 0 2.5rem;}
+
+/* ── ABOUT MISSION ── */
+.mission-snippet{
+  background:var(--glass);border:1px solid var(--border);
+  border-radius:var(--radius);padding:2.5rem;margin-top:3rem;
+  display:flex;align-items:center;gap:2rem;flex-wrap:wrap;
+}
+.mission-snippet p{color:var(--muted);flex:1;min-width:260px;}
+
+/* ── TOPIC CARDS ── */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;margin-top:2.5rem;}
+.topic-card{
+  background:var(--glass);border:1px solid var(--border);
+  border-radius:var(--radius);padding:1.8rem;
+  transition:var(--transition);cursor:pointer;
+  position:relative;overflow:hidden;
+}
+.topic-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(201,168,76,0.07),transparent);
+  opacity:0;transition:var(--transition);
+}
+.topic-card:hover{transform:translateY(-4px);border-color:var(--accent);}
+.topic-card:hover::before{opacity:1;}
+.topic-num{
+  font-family:'Rajdhani',sans-serif;font-size:2.5rem;font-weight:700;
+  color:var(--accent);opacity:0.4;line-height:1;margin-bottom:0.5rem;
+}
+.topic-card h3{font-size:1rem;font-weight:600;margin-bottom:0.5rem;}
+.topic-card p{color:var(--muted);font-size:0.88rem;line-height:1.6;}
+.topic-card .learn-more{
+  display:inline-flex;align-items:center;gap:4px;
+  color:var(--accent);font-size:0.82rem;font-weight:600;
+  margin-top:0.8rem;text-decoration:none;
+  transition:var(--transition);
+}
+.topic-card .learn-more:hover{gap:8px;}
+
+/* ── PROGRAM TIMELINE ── */
+.timeline{margin-top:2.5rem;}
+.tl-item{
+  display:flex;gap:1.5rem;margin-bottom:0;
+  border-left:2px solid var(--border);padding-left:1.5rem;
+  position:relative;
+}
+.tl-item::before{
+  content:'';position:absolute;left:-7px;top:20px;
+  width:12px;height:12px;border-radius:50%;
+  background:var(--deep);border:2px solid var(--accent);
+}
+.tl-time{
+  min-width:110px;font-family:'Rajdhani',sans-serif;
+  font-size:0.85rem;color:var(--accent);font-weight:600;
+  padding-top:0.9rem;
+}
+.tl-body{
+  flex:1;background:var(--glass);border:1px solid var(--border);
+  border-radius:12px;padding:1.2rem 1.4rem;margin-bottom:1rem;
+  cursor:pointer;transition:var(--transition);
+}
+.tl-body:hover{border-color:var(--accent);}
+.tl-type{
+  font-size:0.7rem;letter-spacing:2px;text-transform:uppercase;
+  color:var(--muted);margin-bottom:0.3rem;
+}
+.tl-body h3{font-size:0.97rem;font-weight:600;color:var(--white);}
+.tl-body p{color:var(--muted);font-size:0.85rem;margin-top:0.4rem;}
+.tl-coming{
+  display:inline-block;font-size:0.72rem;padding:2px 8px;
+  background:rgba(201,168,76,0.12);color:var(--accent);
+  border-radius:20px;margin-top:0.4rem;
+}
+.session-icon{font-size:1.1rem;margin-right:0.4rem;}
+
+/* ── SPEAKERS ── */
+.speakers-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1.5rem;margin-top:2rem;}
+.speaker-card{
+  background:var(--glass);border:1px solid var(--border);
+  border-radius:var(--radius);padding:1.5rem;text-align:center;
+  transition:var(--transition);
+}
+.speaker-card:hover{transform:translateY(-3px);border-color:var(--accent);}
+.speaker-avatar{
+  width:80px;height:80px;border-radius:50%;
+  background:linear-gradient(135deg,var(--mid),var(--deep));
+  border:2px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 1rem;font-size:1.8rem;
+}
+.speaker-card h4{font-size:0.9rem;font-weight:600;}
+.speaker-card p{color:var(--muted);font-size:0.8rem;margin-top:0.3rem;}
+
+/* ── HONORARY TABLE ── */
+.honor-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:2rem;}
+.honor-block{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;}
+.honor-block h3{font-family:'Playfair Display',serif;color:var(--accent);margin-bottom:1.2rem;font-size:1.1rem;}
+.honor-list{list-style:none;}
+.honor-list li{
+  display:flex;align-items:flex-start;gap:0.75rem;
+  padding:0.65rem 0;border-bottom:1px solid rgba(201,168,76,0.1);
+  font-size:0.9rem;
+}
+.honor-list li:last-child{border-bottom:none;}
+.honor-list .dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--accent);flex-shrink:0;margin-top:6px;
+}
+.honor-list strong{display:block;color:var(--white);}
+.honor-list span{color:var(--muted);font-size:0.82rem;}
+
+/* ── ROUND TABLE CANVAS ── */
+#rt-canvas{width:100%;height:520px;border-radius:var(--radius);cursor:grab;display:block;}
+#rt-canvas:active{cursor:grabbing;}
+.rt-counter{
+  text-align:center;padding:1rem;
+  font-family:'Rajdhani',sans-serif;font-size:1.1rem;
+  color:var(--accent);letter-spacing:1px;margin-bottom:1rem;
+}
+.rt-hint{text-align:center;color:var(--muted);font-size:0.85rem;margin-bottom:1.5rem;}
+.rt-deadline{
+  background:rgba(201,168,76,0.08);border:1px solid var(--border);
+  border-radius:10px;padding:1rem 1.5rem;text-align:center;
+  color:var(--muted);font-size:0.9rem;margin-bottom:2rem;
+}
+.rt-deadline strong{color:var(--accent);}
+
+/* ── REGISTRATION ── */
+.form-section{
+  background:var(--glass);border:1px solid var(--border);
+  border-radius:var(--radius);padding:2.5rem;margin-bottom:2.5rem;
+}
+.form-section h3{
+  font-family:'Playfair Display',serif;color:var(--accent);
+  margin-bottom:0.5rem;font-size:1.2rem;
+}
+.form-section .sub{color:var(--muted);font-size:0.88rem;margin-bottom:1.5rem;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+.form-group{margin-bottom:1rem;}
+label{display:block;font-size:0.82rem;color:var(--muted);margin-bottom:0.4rem;font-weight:500;letter-spacing:0.4px;}
+input[type=text],input[type=email],textarea,select{
+  width:100%;background:rgba(19,43,64,0.6);
+  border:1px solid rgba(139,163,188,0.25);border-radius:10px;
+  padding:0.7rem 1rem;color:var(--white);font-family:'DM Sans',sans-serif;
+  font-size:0.9rem;outline:none;transition:var(--transition);
+}
+input[type=text]:focus,input[type=email]:focus,textarea:focus,select:focus{
+  border-color:var(--accent);box-shadow:0 0 0 3px rgba(201,168,76,0.12);
+}
+textarea{min-height:90px;resize:vertical;}
+select option{background:var(--deep);}
+.checkbox-group{display:flex;align-items:flex-start;gap:0.75rem;cursor:pointer;}
+.checkbox-group input{width:16px;height:16px;accent-color:var(--accent);cursor:pointer;flex-shrink:0;margin-top:3px;}
+.checkbox-group span{font-size:0.88rem;color:var(--muted);}
+.form-note{
+  background:rgba(201,168,76,0.07);border-left:3px solid var(--accent);
+  border-radius:0 8px 8px 0;padding:0.8rem 1rem;
+  color:var(--muted);font-size:0.83rem;margin-top:1rem;
+}
+.form-closed{
+  background:rgba(224,85,85,0.1);border:1px solid rgba(224,85,85,0.3);
+  border-radius:10px;padding:1.2rem;text-align:center;
+  color:#E05555;font-size:0.9rem;
+}
+
+/* ── MODAL ── */
+.modal-overlay{
+  display:none;position:fixed;inset:0;z-index:2000;
+  background:rgba(5,12,25,0.88);backdrop-filter:blur(8px);
+  align-items:center;justify-content:center;padding:1rem;
+}
+.modal-overlay.open{display:flex;}
+.modal{
+  background:linear-gradient(145deg,#0e2035,var(--deep));
+  border:1px solid var(--border);border-radius:20px;
+  padding:2.5rem;max-width:500px;width:100%;
+  position:relative;max-height:90vh;overflow-y:auto;
+}
+.modal h2{font-family:'Playfair Display',serif;color:var(--accent);margin-bottom:0.3rem;}
+.modal .close-btn{
+  position:absolute;top:1.2rem;right:1.2rem;
+  background:rgba(255,255,255,0.07);border:none;
+  width:34px;height:34px;border-radius:50%;cursor:pointer;
+  color:var(--muted);font-size:1.1rem;display:flex;align-items:center;justify-content:center;
+  transition:var(--transition);
+}
+.modal .close-btn:hover{background:rgba(201,168,76,0.2);color:var(--accent);}
+
+/* ── WORKSHOP ── */
+#workshop-hero{
+  background:linear-gradient(180deg,#050d1a 0%,#0a1e30 100%);
+  text-align:center;padding:7rem 2rem 4rem;
+  position:relative;overflow:hidden;
+}
+.workshop-title{
+  font-family:'Rajdhani',sans-serif;font-weight:700;
+  font-size:clamp(2rem,5vw,3.5rem);
+  color:var(--cyan);letter-spacing:2px;
+  text-shadow:0 0 40px rgba(0,212,255,0.5);
+  margin-bottom:0.5rem;
+}
+.workshop-tagline{color:var(--muted);font-size:1.05rem;margin-bottom:2rem;}
+.countdown-box{
+  display:inline-flex;gap:1.5rem;background:rgba(0,180,216,0.08);
+  border:1px solid rgba(0,212,255,0.25);border-radius:14px;
+  padding:1.2rem 2rem;margin-bottom:2.5rem;
+}
+.cd-unit{text-align:center;}
+.cd-num{
+  font-family:'Rajdhani',sans-serif;font-size:2.2rem;font-weight:700;
+  color:var(--cyan);display:block;text-shadow:0 0 15px rgba(0,212,255,0.6);
+}
+.cd-label{font-size:0.72rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;}
+.cd-sep{font-size:2rem;color:var(--cyan);opacity:0.5;align-self:center;}
+.pods-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1.2rem;margin-top:2rem;}
+.pod-card{
+  background:var(--glass);border:1px solid rgba(0,212,255,0.2);
+  border-radius:14px;padding:1.5rem;text-align:center;
+  transition:var(--transition);cursor:pointer;position:relative;
+}
+.pod-card:hover{transform:translateY(-3px);border-color:var(--cyan);}
+.pod-card.full{opacity:0.5;cursor:not-allowed;}
+.pod-num{
+  font-family:'Rajdhani',sans-serif;font-size:1.8rem;font-weight:700;color:var(--cyan);
+}
+.pod-seats{font-size:0.85rem;color:var(--muted);margin:0.3rem 0;}
+.pod-status{
+  display:inline-block;padding:3px 10px;border-radius:20px;
+  font-size:0.75rem;font-weight:600;
+}
+.pod-status.available{background:rgba(0,212,255,0.12);color:var(--cyan);}
+.pod-status.full{background:rgba(224,85,85,0.12);color:#E05555;}
+.pod-pulse{
+  position:absolute;top:10px;right:10px;
+  width:10px;height:10px;border-radius:50%;background:var(--cyan);
+}
+.pod-pulse::after{
+  content:'';position:absolute;inset:-4px;border-radius:50%;
+  border:2px solid var(--cyan);animation:pulse 2s infinite;
+}
+@keyframes pulse{
+  0%{transform:scale(1);opacity:0.8;}
+  100%{transform:scale(1.8);opacity:0;}
+}
+
+/* ── AI DEMO TEASER ── */
+.ai-demo{
+  background:rgba(0,180,216,0.05);border:1px solid rgba(0,212,255,0.15);
+  border-radius:var(--radius);padding:2rem;margin-top:2rem;
+}
+.ai-demo h3{color:var(--cyan);margin-bottom:1rem;font-family:'Rajdhani',sans-serif;font-size:1.3rem;}
+.demo-upload{
+  border:2px dashed rgba(0,212,255,0.3);border-radius:12px;
+  padding:2rem;text-align:center;color:var(--muted);font-size:0.9rem;
+  cursor:pointer;transition:var(--transition);
+}
+.demo-upload:hover{border-color:var(--cyan);background:rgba(0,212,255,0.04);}
+.progress-bar-wrap{background:rgba(255,255,255,0.07);border-radius:50px;height:8px;margin:0.5rem 0;}
+.progress-bar{height:100%;border-radius:50px;background:linear-gradient(90deg,#00b4d8,var(--cyan));width:0;transition:width 0.5s ease;}
+.prediction-result{
+  background:rgba(0,212,255,0.06);border:1px solid rgba(0,212,255,0.2);
+  border-radius:10px;padding:1.2rem;text-align:center;margin-top:1rem;
+  display:none;
+}
+.prediction-result .pred-label{font-size:1.2rem;font-weight:700;color:var(--cyan);}
+.prediction-result .pred-conf{color:var(--muted);font-size:0.85rem;}
+
+/* ── CONTACT ── */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;align-items:start;}
+.contact-info{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;}
+.contact-info h3{font-family:'Playfair Display',serif;color:var(--accent);margin-bottom:1.5rem;}
+.contact-item{display:flex;gap:0.9rem;margin-bottom:1.2rem;align-items:flex-start;}
+.contact-item .icon{
+  width:38px;height:38px;flex-shrink:0;
+  background:rgba(201,168,76,0.1);border:1px solid var(--border);
+  border-radius:9px;display:flex;align-items:center;justify-content:center;
+  font-size:1rem;
+}
+.contact-item p{font-size:0.88rem;color:var(--muted);line-height:1.55;}
+.contact-item a{color:var(--accent);text-decoration:none;}
+.contact-item a:hover{text-decoration:underline;}
+
+/* ── PARTNERS ── */
+.partners-row{
+  display:flex;flex-wrap:wrap;gap:1.2rem;
+  justify-content:center;margin-top:2rem;
+}
+.partner-badge{
+  background:var(--glass);border:1px solid var(--border);
+  border-radius:12px;padding:1rem 1.8rem;
+  font-size:0.85rem;color:var(--muted);text-align:center;
+  min-width:160px;transition:var(--transition);
+}
+.partner-badge:hover{border-color:var(--accent);color:var(--white);}
+.partner-badge strong{display:block;color:var(--accent2);font-size:1.05rem;margin-bottom:0.2rem;}
+
+/* ── FOOTER ── */
+footer{
+  background:rgba(7,17,33,0.98);border-top:1px solid var(--border);
+  padding:3rem 2rem 2rem;
+}
+.footer-grid{
+  max-width:1100px;margin:0 auto;
+  display:grid;grid-template-columns:2fr 1fr 1fr;gap:2.5rem;margin-bottom:2rem;
+}
+.footer-brand{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--accent);margin-bottom:0.75rem;}
+.footer-desc{color:var(--muted);font-size:0.85rem;line-height:1.7;}
+footer h4{color:var(--white);font-size:0.9rem;font-weight:600;margin-bottom:1rem;letter-spacing:0.5px;}
+footer ul{list-style:none;}
+footer ul li a{color:var(--muted);font-size:0.85rem;text-decoration:none;transition:var(--transition);}
+footer ul li a:hover{color:var(--accent);}
+footer ul li{margin-bottom:0.5rem;}
+.footer-bottom{
+  max-width:1100px;margin:0 auto;
+  border-top:1px solid rgba(201,168,76,0.12);
+  padding-top:1.5rem;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;
+}
+.footer-bottom p{color:var(--muted);font-size:0.8rem;}
+
+/* ── TOAST ── */
+#toast{
+  position:fixed;bottom:2rem;right:2rem;z-index:9999;
+  background:linear-gradient(135deg,#0e2035,var(--mid));
+  border:1px solid var(--accent);border-radius:12px;
+  padding:1rem 1.5rem;color:var(--white);font-size:0.9rem;
+  max-width:360px;transform:translateY(120px);opacity:0;
+  transition:var(--transition);pointer-events:none;
+}
+#toast.show{transform:translateY(0);opacity:1;}
+#toast.success{border-color:var(--success);}
+#toast.error{border-color:var(--danger);}
+
+/* ── ACCORDION ── */
+.accordion{margin-top:1.5rem;}
+.acc-item{
+  border:1px solid var(--border);border-radius:12px;margin-bottom:0.8rem;overflow:hidden;
+}
+.acc-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.1rem 1.4rem;cursor:pointer;background:var(--glass);
+  transition:var(--transition);
+}
+.acc-header:hover{background:rgba(201,168,76,0.07);}
+.acc-header h4{font-size:0.95rem;font-weight:600;}
+.acc-chevron{color:var(--accent);font-size:1.1rem;transition:var(--transition);}
+.acc-header.open .acc-chevron{transform:rotate(180deg);}
+.acc-body{max-height:0;overflow:hidden;transition:max-height 0.4s ease;}
+.acc-body.open{max-height:600px;}
+.acc-content{padding:1.2rem 1.4rem;color:var(--muted);font-size:0.9rem;border-top:1px solid var(--border);}
+
+/* ── SUCCESS ── */
+.success-msg{
+  background:rgba(62,201,123,0.1);border:1px solid rgba(62,201,123,0.3);
+  border-radius:10px;padding:1.2rem;text-align:center;
+  color:var(--success);font-size:0.9rem;display:none;margin-top:1rem;
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .nav-links{
+    display:none;position:fixed;top:64px;left:0;right:0;
+    background:rgba(11,26,47,0.98);border-bottom:1px solid var(--border);
+    flex-direction:column;padding:1rem;gap:0.1rem;
+  }
+  .nav-links.open{display:flex;}
+  .nav-toggle{display:flex;}
+  .honor-grid,.contact-grid,.footer-grid{grid-template-columns:1fr;}
+  .form-row{grid-template-columns:1fr;}
+  #rt-canvas{height:340px;}
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
+.fade-in{animation:fadeUp 0.7s ease both;}
+.fade-in-d1{animation-delay:0.1s;}
+.fade-in-d2{animation-delay:0.2s;}
+.fade-in-d3{animation-delay:0.35s;}
+.fade-in-d4{animation-delay:0.5s;}
+.fade-in-d5{animation-delay:0.65s;}
+
+/* ── GALLERY ── */
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin-top:1.5rem;}
+.gallery-item{
+  aspect-ratio:4/3;border-radius:12px;
+  background:linear-gradient(135deg,var(--mid),#091520);
+  border:1px solid var(--border);overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--muted);font-size:0.82rem;text-align:center;padding:1rem;
+  transition:var(--transition);
+}
+.gallery-item:hover{border-color:var(--accent);}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand" onclick="showPage('home')">SciDay<span style="color:var(--white)">2026</span></div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#" onclick="showPage('home')" data-page="home" class="active">Home</a></li>
+    <li><a href="#" onclick="showPage('about')" data-page="about">About</a></li>
+    <li><a href="#" onclick="showPage('program')" data-page="program">Program</a></li>
+    <li><a href="#" onclick="showPage('topics')" data-page="topics">Topics</a></li>
+    <li><a href="#" onclick="showPage('roundtable')" data-page="roundtable">Round Table</a></li>
+    <li><a href="#" onclick="showPage('speakers')" data-page="speakers">Speakers</a></li>
+    <li><a href="#" onclick="showPage('workshop')" data-page="workshop">AI Workshop</a></li>
+    <li><a href="#" onclick="showPage('register')" data-page="register">Register</a></li>
+    <li><a href="#" onclick="showPage('contact')" data-page="contact">Contact</a></li>
+  </ul>
+  <div class="nav-toggle" id="navToggle" onclick="toggleNav()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- TOAST -->
+<div id="toast">✓ Message sent!</div>
+
+<!-- ════════════════════════ HOME PAGE ════════════════════════ -->
+<div class="page active" id="page-home">
+
+  <!-- HERO -->
+  <section id="hero">
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-content">
+      <div class="hero-badge fade-in">Constantine, Algeria · June 9, 2026</div>
+      <h1 class="hero-title fade-in fade-in-d1">SciDay2026</h1>
+      <p class="hero-sub fade-in fade-in-d2">Scientific Day 2026</p>
+      <div class="hero-question fade-in fade-in-d3">
+        "Where Does Immunology Stand in Cancer Research? A Closer Look"
+      </div>
+      <p class="hero-author fade-in fade-in-d4">By Dr. Imene HAMADOU</p>
+      <p class="hero-meta fade-in fade-in-d4">
+        <strong>June 09, 2026 · 08:00 – 18:00</strong><br/>
+        Conference Room, Faculty of Nature Sciences and Life,<br/>University Constantine 1, Frères Mentouri Constantine, Algeria
+      </p>
+      <div class="hero-btns fade-in fade-in-d5">
+        <button class="btn btn-primary" onclick="showPage('register')">Register Now</button>
+        <button class="btn btn-outline" onclick="showPage('program')">View Program</button>
+        <button class="btn btn-cyan" onclick="showPage('roundtable')">Join the Round Table</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT SNIPPET -->
+  <section style="padding:3rem 2rem 1rem;">
+    <div class="container">
+      <span class="section-label">Our Mission</span>
+      <h2 class="section-title">Bridging Science &amp; <span>Innovation</span></h2>
+      <div class="divider"></div>
+      <div class="mission-snippet">
+        <p>SciDay2026 brings together academic researchers, clinicians, students, and industry professionals to advance cancer immunology, support innovation, and strengthen the Algerian research ecosystem.</p>
+        <button class="btn btn-outline" onclick="showPage('about')">Learn More →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- KEY TOPICS -->
+  <section>
+    <div class="container">
+      <span class="section-label">Key Topics</span>
+      <h2 class="section-title">5 Core Research <span>Themes</span></h2>
+      <div class="divider"></div>
+      <div class="cards-grid" id="homeTopicsGrid"></div>
+    </div>
+  </section>
+
+  <!-- ROUND TABLE PREVIEW -->
+  <section style="background:linear-gradient(180deg,transparent,rgba(19,43,64,0.4),transparent);">
+    <div class="container" style="text-align:center;">
+      <span class="section-label">Round Table</span>
+      <h2 class="section-title">Join the 3D Virtual <span>Round Table</span></h2>
+      <div class="divider" style="margin:1rem auto 2rem;"></div>
+      <p style="color:var(--muted);max-width:520px;margin:0 auto 2rem;">An interactive expert panel discussion with only 15 seats available. Reserve your place and shape the conversation on cancer research's future.</p>
+      <button class="btn btn-primary" onclick="showPage('roundtable')">Reserve Your Seat →</button>
+    </div>
+  </section>
+
+  <!-- HONORARY -->
+  <section>
+    <div class="container">
+      <span class="section-label">Distinguished Guests</span>
+      <h2 class="section-title">Honorary Presidents <span>&amp; Guests</span></h2>
+      <div class="divider"></div>
+      <div class="honor-grid" id="honorGrid"></div>
+    </div>
+  </section>
+
+  <!-- PARTNERS -->
+  <section>
+    <div class="container">
+      <span class="section-label">Partners</span>
+      <h2 class="section-title">Our <span>Partners</span></h2>
+      <div class="divider"></div>
+      <div class="partners-row">
+        <div class="partner-badge"><strong>🏛️</strong>Ministry of Higher Education</div>
+        <div class="partner-badge"><strong>🎓</strong>University Constantine 1</div>
+        <div class="partner-badge"><strong>🔬</strong>Faculty of Nature Sciences &amp; Life</div>
+        <div class="partner-badge"><strong>🧬</strong>Laboratory of Immunology</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section>
+    <div class="container">
+      <span class="section-label">Gallery</span>
+      <h2 class="section-title">Event <span>Gallery</span></h2>
+      <div class="divider"></div>
+      <p style="color:var(--muted);font-size:0.9rem;">Visual highlights from the organizing institution and event materials</p>
+      <div class="gallery-grid">
+        <div class="gallery-item">🔬<br/>Research Laboratory<br/>University Constantine 1</div>
+        <div class="gallery-item">🧬<br/>Immunology Symposium<br/>2025 Archive</div>
+        <div class="gallery-item">🏛️<br/>Faculty of Nature Sciences<br/>&amp; Life</div>
+        <div class="gallery-item">📊<br/>Cancer Research Data<br/>Visual</div>
+        <div class="gallery-item">🤝<br/>Academic Collaboration<br/>Network</div>
+        <div class="gallery-item">🎓<br/>Student Research<br/>Presentations</div>
+      </div>
+    </div>
+  </section>
+</div><!-- end home -->
+
+<!-- ════════════════════════ ABOUT PAGE ════════════════════════ -->
+<div class="page" id="page-about">
+  <section style="padding-top:8rem;">
+    <div class="container">
+      <span class="section-label">About SciDay2026</span>
+      <h2 class="section-title">Our <span>Mission</span></h2>
+      <div class="divider"></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-bottom:3rem;">
+        <div class="topic-card">
+          <div class="topic-num">01</div>
+          <h3>Encourage Knowledge Transfer</h3>
+          <p>Facilitate exchange between academic researchers, clinicians, students, and industry professionals to accelerate discoveries.</p>
+        </div>
+        <div class="topic-card">
+          <div class="topic-num">02</div>
+          <h3>Support Innovation &amp; Entrepreneurship</h3>
+          <p>Connect scientific discoveries with patient development, startup creation, and technology valorization.</p>
+        </div>
+        <div class="topic-card">
+          <div class="topic-num">03</div>
+          <h3>Strengthen the Algerian Research Ecosystem</h3>
+          <p>Build sustainable networks and identify funding opportunities for cancer research in Algeria and North Africa.</p>
+        </div>
+      </div>
+      <span class="section-label">Core Themes</span>
+      <h2 class="section-title">5 Core Research <span>Themes</span></h2>
+      <div class="divider"></div>
+      <div class="cards-grid" id="aboutTopicsGrid"></div>
+      <div style="margin-top:3rem;background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);padding:2.5rem;">
+        <h3 style="font-family:'Playfair Display',serif;color:var(--accent);margin-bottom:1rem;">Interdisciplinary Approach</h3>
+        <p style="color:var(--muted);line-height:1.8;">SciDay2026 uniquely bridges molecular immunology, clinical oncology, computational biology, and biotech entrepreneurship. By convening experts across disciplines under one roof, we catalyse the kind of cross-pollination that turns fundamental discoveries into life-saving therapies — and therapies into scalable enterprises that benefit patients across Algeria, North Africa, and beyond.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ════════════════════════ PROGRAM PAGE ════════════════════════ -->
+<div class="page" id="page-program">
+  <section style="padding-top:8rem;">
+    <div class="container">
+      <span class="section-label">June 9, 2026</span>
+      <h2 class="section-title">Full Day <span>Program</span></h2>
+      <div class="divider"></div>
+      <p style="color:var(--muted);margin-bottom:2rem;">08:00 – 18:00 · Conference Room, Faculty of Nature Sciences and Life, University Constantine 1</p>
+      <div class="timeline" id="programTimeline"></div>
+    </div>
+  </section>
+</div>
+
+<!-- ════════════════════════ TOPICS PAGE ════════════════════════ -->
+<div class="page" id="page-topics">
+  <section style="padding-top:8rem;">
+    <div class="container">
+      <span class="section-label">Research Areas</span>
+      <h2 class="section-title">Conference <span>Topics</span></h2>
+      <div class="divider"></div>
+      <div id="topicsGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:1.8rem;margin-top:2rem;"></div>
+    </div>
+  </section>
+</div>
+
+<!-- ════════════════════════ ROUND TABLE PAGE ════════════════════════ -->
+<div class="page" id="page-roundtable">
+  <section style="padding-top:8rem;">
+    <div class="container">
+      <span class="section-label">Expert Panel</span>
+      <h2 class="section-title">3D Round Table <span>Panel Discussion</span></h2>
+      <div class="divider"></div>
+      <div class="rt-deadline">
+        <strong>⏰ Expert Seat Registration Closes: May 20, 2026</strong><br/>
+        Join 15 distinguished seats for an exclusive expert panel discussion on the future of cancer immunotherapy.
+      </div>
+      <div class="rt-counter" id="rtCounter">Seats Available: <span id="seatsLeft">15</span> / 15</div>
+      <p class="rt-hint">🖱 Drag to rotate · Scroll to zoom · Click a chair to reserve</p>
+      <canvas id="rt-canvas"></canvas>
+    </div>
+  </section>
+</div>
+
+<!-- ════════════════════════ SPEAKERS PAGE ════════════════════════ -->
+<div class="page" id="page-speakers">
+  <section style="padding-top:8rem;">
+    <div class="container">
+      <span class="section-label">Distinguished Experts</span>
+      <h2 class="section-title">Invited <span>Speakers</span></h2>
+      <div class="divider"></div>
+      <div class="speakers-grid">
+        <div class="speaker-card" style="--i:0"><div class="speaker-avatar">👤</div><h4>Coming Soon</h4><p>Invited Speaker</p><p style="color:var(--muted);font-size:0.78rem;margin-top:0.3rem;">Details will be announced shortly.</p></div>
+        <div class="speaker-card"><div class="speaker-avatar">👤</div><h4>Coming Soon</h4><p>Invited Speaker</p></div>
+        <div class="speaker-card"><div class="speaker-avatar">👤</div><h4>Coming Soon</h4><p>Invited Speaker</p></div>
+        <div class="speaker-card"><div class="speaker-avatar">👤</div><h4>Coming Soon</h4><p>Invited Speaker</p></div>
+        <div class="speaker-card"><div class="speaker-avatar">👤</div><h4>Coming Soon</h4><p>Invited Speaker</p></div>
+        <div class="speaker-card"><div class="speaker-avatar">👤</div><h4>Coming Soon</h4><p>Invited Speaker</p></div>
+      </div>
+      <div style="margin-top:3rem;" id="speakerHonorGrid"></div>
+    </div>
+  </section>
+</div>
+
+<!-- ════════════════════════ WORKSHOP PAGE ════════════════════════ -->
+<div class="page" id="page-workshop">
+  <div id="workshop-hero">
+    <div style="position:relative;z-index:2;">
+      <div class="hero-badge" style="border-color:rgba(0,212,255,0.3);color:var(--cyan);background:rgba(0,212,255,0.07);">
+        June 9, 2026 · 14:00 – 14:30 · Conference Room
+      </div>
+      <h1 class="workshop-title">Train an AI to Detect Cancer Cells</h1>
+      <p class="workshop-tagline">From pixels to prediction — a hands-on deep learning lab</p>
+      <div class="countdown-box" id="workshopCountdown">
+        <div class="cd-unit"><span class="cd-num" id="cdDays">00</span><span class="cd-label">Days</span></div>
+        <span class="cd-sep">:</span>
+        <div class="cd-unit"><span class="cd-num" id="cdHours">00</span><span class="cd-label">Hours</span></div>
+        <span class="cd-sep">:</span>
+        <div class="cd-unit"><span class="cd-num" id="cdMins">00</span><span class="cd-label">Mins</span></div>
+        <span class="cd-sep">:</span>
+        <div class="cd-unit"><span class="cd-num" id="cdSecs">00</span><span class="cd-label">Secs</span></div>
+      </div>
+      <br/>
+      <button class="btn btn-cyan" onclick="document.getElementById('ws-pods').scrollIntoView({behavior:'smooth'})">
+        Reserve Your Lab Seat →
+      </button>
+    </div>
+  </div>
+
+  <section>
+    <div class="container">
+      <div class="accordion">
+        <div class="acc-item">
+          <div class="acc-header" onclick="toggleAcc(this)">
+            <h4>📚 What You'll Learn</h4><span class="acc-chevron">▾</span>
+          </div>
+          <div class="acc-body">
+            <div class="acc-content">Dataset preparation, training a binary cell classifier, interpreting probability heatmaps, and evaluating model performance for cancer diagnosis support.</div>
+          </div>
+        </div>
+        <div class="acc-item">
+          <div class="acc-header" onclick="toggleAcc(this)">
+            <h4>⚡ Prerequisites</h4><span class="acc-chevron">▾</span>
+          </div>
+          <div class="acc-body">
+            <div class="acc-content">
+              Basic AI/ML familiarity (no coding required, but helpful). Fundamental understanding of cancer cell biology (mandatory). <strong>Bring your own laptop and charger (mandatory).</strong>
+            </div>
+          </div>
+        </div>
+        <div class="acc-item">
+          <div class="acc-header" onclick="toggleAcc(this)">
+            <h4>🎁 Provided Materials</h4><span class="acc-chevron">▾</span>
+          </div>
+          <div class="acc-body">
+            <div class="acc-content">
+              Pretrained starter model (downloadable during workshop), curated dataset of ≥10,000 annotated cell images, certificate of completion (issued post-workshop).
+            </div>
+          </div>
+        </div>
+        <div class="acc-item">
+          <div class="acc-header" onclick="toggleAcc(this)">
+            <h4>👨‍🏫 Instructors</h4><span class="acc-chevron">▾</span>
+          </div>
+          <div class="acc-body">
+            <div class="acc-content">Instructor details coming soon. Expert practitioners in deep learning and computational pathology.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PODS -->
+  <section id="ws-pods">
+    <div class="container">
+      <span class="section-label">Seat Booking</span>
+      <h2 class="section-title">Only 30 Seats – <span>5 Pods of 6</span></h2>
+      <div class="divider"></div>
+      <p style="color:var(--muted);margin-bottom:2rem;font-size:0.9rem;">Booking closes June 7, 2026 at 23:59 (Algeria Time)</p>
+      <div class="pods-grid" id="podsGrid"></div>
+    </div>
+  </section>
+
+  <!-- AI DEMO -->
+  <section>
+    <div class="container">
+      <span class="section-label">Live Demo</span>
+      <h2 class="section-title">Try the AI <span>Model</span></h2>
+      <div class="divider"></div>
+      <div class="ai-demo">
+        <h3>🔬 Simulated Cancer Cell Classifier</h3>
+        <p style="color:var(--muted);font-size:0.88rem;margin-bottom:1.2rem;">Upload a sample image or use one of the examples below to see a simulated prediction pipeline.</p>
+        <div class="demo-upload" id="demoUpload" onclick="runDemoInference()">
+          <p>📁 Click to upload a sample image — or click below to use an example</p>
+        </div>
+        <div style="display:flex;gap:0.75rem;margin-top:1rem;flex-wrap:wrap;">
+          <button class="btn btn-outline" style="font-size:0.8rem;padding:0.4rem 1rem;" onclick="runDemoInference('benign')">🟢 Example: Benign Cell</button>
+          <button class="btn btn-outline" style="font-size:0.8rem;padding:0.4rem 1rem;" onclick="runDemoInference('malignant')">🔴 Example: Malignant Cell</button>
+          <button class="btn btn-outline" style="font-size:0.8rem;padding:0.4rem 1rem;" onclick="runDemoInference('uncertain')">🟡 Example: Uncertain</button>
+        </div>
+        <div id="demoProgress" style="display:none;margin-top:1.2rem;">
+          <p style="color:var(--muted);font-size:0.82rem;margin-bottom:0.3rem;">Preprocessing image...</p>
+          <div class="progress-bar-wrap"><div class="progress-bar" id="pb1"></div></div>
+          <p style="color:var(--muted);font-size:0.82rem;margin:0.5rem 0 0.3rem;">Running inference...</p>
+          <div class="progress-bar-wrap"><div class="progress-bar" id="pb2"></div></div>
+          <p style="color:var(--muted);font-size:0.82rem;margin:0.5rem 0 0.3rem;">Generating heatmap...</p>
+          <div class="progress-bar-wrap"><div class="progress-bar" id="pb3"></div></div>
+        </div>
+        <div class="prediction-result" id="predResult">
+          <p class="pred-label" id="predLabel">Benign</p>
+          <p class="pred-conf" id="predConf">Confidence: 94.2%</p>
+          <p style="color:var(--muted);font-size:0.8rem;margin-top:0.5rem;">You'll build this exact model at the workshop!</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ════════════════════════ REGISTER PAGE ════════════════════════ -->
+<div class="page" id="page-register">
+  <section style="padding-top:8rem;">
+    <div class="container">
+      <span class="section-label">Join Us</span>
+      <h2 class="section-title">Registration &amp; <span>Forms</span></h2>
+      <div class="divider"></div>
+
+      <!-- A. GENERAL REGISTRATION -->
+      <div class="form-section">
+        <h3>A. General Registration</h3>
+        <p class="sub">Open: May 20, 2026 – June 1, 2026</p>
+        <div id="genRegContent">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Full Name *</label>
+              <input type="text" id="grName" placeholder="Dr. / Mr. / Ms. Full Name" required/>
+            </div>
+            <div class="form-group">
+              <label>Email Address *</label>
+              <input type="email" id="grEmail" placeholder="your@email.com" required/>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Affiliation</label>
+              <input type="text" id="grAffil" placeholder="University / Hospital / Company"/>
+            </div>
+            <div class="form-group">
+              <label>Registration Type</label>
+              <select id="grType">
+                <option value="General Attendance">General Attendance</option>
+                <option value="Student / PhD Candidate">Student / PhD Candidate</option>
+                <option value="Researcher">Researcher</option>
+                <option value="Clinician">Clinician</option>
+                <option value="Industry Professional">Industry Professional</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="checkbox-group" style="display:flex;">
+              <input type="checkbox" id="grPoster" onchange="togglePosterFields()"/>
+              <span>I want to submit a Poster or Oral Communication (Available only for Topic 03)</span>
+            </label>
+          </div>
+          <div id="posterFields" style="display:none;">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Submission Type</label>
+                <select id="subType"><option>Poster</option><option>Oral Communication</option></select>
+              </div>
+              <div class="form-group">
+                <label>Submission Title</label>
+                <input type="text" id="subTitle" placeholder="Title of your work"/>
+              </div>
+            </div>
+            <div class="form-note">
+              📌 Poster and Oral Communication presentations will be displayed during the parallel Poster Session (15:30–15:45) alongside the Debate for Topics 03 &amp; 04.<br/>
+              Please send your abstract to <strong>immuno.sciday26@gmail.com</strong>
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="submitGenReg()" style="margin-top:1.2rem;">Complete Registration</button>
+          <div class="success-msg" id="genRegSuccess">✅ Registration submitted! We will contact you at the email address provided.</div>
+        </div>
+      </div>
+
+      <!-- B. ROUND TABLE LINK -->
+      <div class="form-section">
+        <h3>B. Round Table Expert Seat Reservation</h3>
+        <p class="sub">Select a seat at our interactive 3D Round Table.</p>
+        <button class="btn btn-outline" onclick="showPage('roundtable')">→ Go to Round Table &amp; Reserve a Seat</button>
+      </div>
+
+      <!-- C. SUBMIT QUESTION -->
+      <div class="form-section">
+        <h3>C. Submit Your Question</h3>
+        <p class="sub">Opens at 10:00 AM, closes at 13:00 on June 09, 2026</p>
+        <div id="qFormContent"></div>
+      </div>
+    </div>
+  </section>
+</div>
+<script>
+/*function submitGenReg() {
+
+  const data = {
+    fullName: document.getElementById("grName").value,
+    email: document.getElementById("grEmail").value,
+    affiliation: document.getElementById("grAffil").value,
+    registrationType: document.getElementById("grType").value,
+    poster: document.getElementById("grPoster").checked ? "Yes" : "No",
+    submissionType: document.getElementById("subType")?.value || "",
+    submissionTitle: document.getElementById("subTitle")?.value || ""
+  };
+
+  // 🔴 Replace with your Web App URL
+  const url = "https://script.google.com/macros/s/AKfycbyeh70B0mgk_SoIxEe9YAa7N_EZWR9CX2SZ_Guoj7GXAncQZKM_45jPAUQ68TryTgPQ/exec";
+
+  fetch(url, {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+  .then(res => res.json())
+  .then(response => {
+    document.getElementById("genRegSuccess").style.display = "block";
+  })
+  .catch(error => {
+    alert("❌ Error submitting form");
+    console.error(error);
+  });
+}*/
+</script>
+<!-- ════════════════════════ CONTACT PAGE ════════════════════════ -->
+<div class="page" id="page-contact">
+  <section style="padding-top:8rem;">
+    <div class="container">
+      <span class="section-label">Get In Touch</span>
+      <h2 class="section-title">Contact <span>Us</span></h2>
+      <div class="divider"></div>
+      <div class="contact-grid">
+        <div class="contact-info">
+          <h3>Event Information</h3>
+          <div class="contact-item">
+            <div class="icon">📧</div>
+            <p><strong style="color:var(--white);">Email</strong><br/>
+            <a href="mailto:immuno.sciday26@gmail.com">immuno.sciday26@gmail.com</a></p>
+          </div>
+          <div class="contact-item">
+            <div class="icon">📍</div>
+            <p><strong style="color:var(--white);">Venue</strong><br/>
+            Conference Room, Faculty of Nature Sciences and Life,<br/>
+            University Constantine 1, Frères Mentouri Constantine, Algeria</p>
+          </div>
+          <div class="contact-item">
+            <div class="icon">🗓️</div>
+            <p><strong style="color:var(--white);">Date &amp; Time</strong><br/>
+            June 09, 2026 · 08:00 – 18:00</p>
+          </div>
+          <div class="contact-item">
+            <div class="icon">👩‍🔬</div>
+            <p><strong style="color:var(--white);">Organizer</strong><br/>
+            Dr. Imene HAMADOU<br/>
+            Laboratory of Immunology and Biological Activities of Natural Substances,<br/>
+            Faculty of Nature Sciences and Life,<br/>
+            University of Mentouri Brothers – Constantine 1, Algeria</p>
+          </div>
+        </div>
+        <div class="form-section" style="margin-bottom:0;">
+          <h3>Send a Message</h3>
+          <p class="sub">We'll reply within 48 hours.</p>
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="ctName" placeholder="Your Name"/>
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="ctEmail" placeholder="your@email.com"/>
+          </div>
+          <div class="form-group">
+            <label>Message</label>
+            <textarea id="ctMsg" placeholder="Your message..."></textarea>
+          </div>
+          <button class="btn btn-primary" onclick="submitContact()">Send Message</button>
+          <div class="success-msg" id="contactSuccess">✅ Message sent! We'll reply shortly.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ════════════════════════ FOOTER ════════════════════════ -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">SciDay2026</div>
+      <p class="footer-desc">
+        Scientific Day on Immunology and Cancer Research<br/>
+        Organized by Dr. Imene HAMADOU<br/>
+        Laboratory of Immunology and Biological Activities of Natural Substances,<br/>
+        Faculty of Nature Sciences and Life,<br/>
+        University of Mentouri Brothers – Constantine 1, Algeria.
+      </p>
+    </div>
+    <div>
+      <h4>Navigation</h4>
+      <ul>
+        <li><a href="#" onclick="showPage('home')">Home</a></li>
+        <li><a href="#" onclick="showPage('about')">About</a></li>
+        <li><a href="#" onclick="showPage('program')">Program</a></li>
+        <li><a href="#" onclick="showPage('topics')">Topics</a></li>
+        <li><a href="#" onclick="showPage('roundtable')">Round Table</a></li>
+        <li><a href="#" onclick="showPage('speakers')">Speakers</a></li>
+        <li><a href="#" onclick="showPage('register')">Register</a></li>
+        <li><a href="#" onclick="showPage('contact')">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="mailto:immuno.sciday26@gmail.com">immuno.sciday26@gmail.com</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Scientific Day — Immunology &amp; Cancer Research</p>
+    <p style="color:var(--muted);font-size:0.78rem;">Constantine, Algeria · June 9, 2026</p>
+  </div>
+</footer>
+
+<!-- ════════════════════════ MODALS ════════════════════════ -->
+
+<!-- Round Table Modal -->
+<div class="modal-overlay" id="rtModal">
+  <div class="modal">
+    <button class="close-btn" onclick="closeModal('rtModal')">✕</button>
+    <h2 id="rtModalTitle">Reserve Seat #1</h2>
+    <p style="color:var(--muted);font-size:0.85rem;margin-bottom:1.5rem;">Expert Seat Registration · Round Table Panel</p>
+    <div id="rtFormWrap">
+      <div class="form-group">
+        <label>Expert Name *</label>
+        <input type="text" id="rtName" placeholder="Prof. / Dr. Full Name"/>
+      </div>
+      <div class="form-group">
+        <label>Affiliation</label>
+        <input type="text" id="rtAffil" placeholder="University / Institution"/>
+      </div>
+      <div class="form-group">
+        <label>Short Bio</label>
+        <textarea id="rtBio" placeholder="Brief professional background..."></textarea>
+      </div>
+      <label class="checkbox-group" style="margin-bottom:1.2rem;">
+        <input type="checkbox" id="rtConfirm"/>
+        <span>☑ Reserve Seat — I confirm my participation as an expert panelist</span>
+      </label>
+      <button class="btn btn-primary" onclick="submitRTReservation()" style="width:100%;">Reserve Seat</button>
+      <div class="success-msg" id="rtSuccess"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Workshop Pod Modal -->
+<div class="modal-overlay" id="wsModal">
+  <div class="modal">
+    <button class="close-btn" onclick="closeModal('wsModal')">✕</button>
+    <h2 id="wsModalTitle">Secure Your Seat – Pod 1</h2>
+    <p style="color:var(--muted);font-size:0.85rem;margin-bottom:1.5rem;">June 9, 2026 · 14:00–14:30 · AI Lab Workshop</p>
+    <div class="form-group">
+      <label>Full Name *</label>
+      <input type="text" id="wsName" placeholder="Your full name"/>
+    </div>
+    <div class="form-group">
+      <label>Email Address *</label>
+      <input type="email" id="wsEmail" placeholder="your@email.com"/>
+    </div>
+    <div class="form-group">
+      <label>Affiliation</label>
+      <input type="text" id="wsAffil" placeholder="University / Institution"/>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Experience Level</label>
+        <select id="wsExp"><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select>
+      </div>
+      <div class="form-group">
+        <label>Laptop OS</label>
+        <select id="wsOS"><option>Windows</option><option>macOS</option><option>Linux</option></select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Motivation Statement <span style="color:var(--muted);font-size:0.78rem;" id="motCharCount">(0/150)</span></label>
+      <textarea id="wsMotiv" maxlength="150" placeholder="Why are you interested in AI for cancer detection?" oninput="updateCharCount()"></textarea>
+    </div>
+    <label class="checkbox-group" style="margin-bottom:1.2rem;">
+      <input type="checkbox" id="wsLaptop"/>
+      <span>I understand that I must bring my own laptop and a charger. (Required)</span>
+    </label>
+    <button class="btn btn-cyan" id="wsSubmitBtn" onclick="submitWorkshop()" style="width:100%;">Confirm My Lab Seat</button>
+    <div class="success-msg" id="wsSuccess"></div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════
+const TOPICS = [
+  {num:'01',title:'Fundamentals of Cancer and Immunology',desc:'Explore the foundational principles of tumor immunology, immune surveillance, and the tumor microenvironment.'},
+  {num:'02',title:'Novel Immunotherapeutic Strategies in Cancer',desc:'Cutting-edge therapies including CAR-T cells, checkpoint inhibitors, bispecific antibodies, and cancer vaccines.'},
+  {num:'03',title:'Overcoming Resistance and Enhancing Efficacy',desc:'Addressing tumor immune evasion, combination therapies, and strategies to improve patient response rates.'},
+  {num:'04',title:'Computational and Bioinformatics Approaches',desc:'AI, machine learning, single-cell analysis, and multi-omics integration in cancer immunology research.'},
+  {num:'05',title:'From Science to Economic Enterprise',desc:'Patents, startups, technology transfer, and valorization of immunotherapy research.'}
+];
+
+const PROGRAM = [
+  {time:'08:00–08:30',type:'Reception',icon:'☕',title:'Reception & Registration',desc:'Welcome desk, badge distribution, networking welcome coffee.'},
+  {time:'08:30–09:00',type:'Ceremony',icon:'🎙️',title:'Opening Ceremony',desc:'Welcome address, introduction to the Scientific Day, presentation of honorary guests.'},
+  {time:'09:00–10:30',type:'Session 1',icon:'🔬',title:'Session 1 – Topic 01: Fundamentals of Cancer and Immunology',desc:'Introductory session covering tumor immunology fundamentals, immune surveillance, and the tumor microenvironment.',coming:true},
+  {time:'10:30–10:45',type:'Debate',icon:'💬',title:'Debate — Topic 01',desc:'Open discussion and Q&A on the fundamentals.'},
+  {time:'10:45–11:00',type:'Break',icon:'☕',title:'Coffee Break & Networking',desc:'Refreshments and informal discussions.'},
+  {time:'11:00–12:15',type:'Session 2',icon:'🧬',title:'Session 2 – Topic 02: Novel Immunotherapeutic Strategies',desc:'CAR-T cells, checkpoint inhibitors, bispecific antibodies, and cancer vaccines.',coming:true},
+  {time:'12:15–12:30',type:'Debate',icon:'💬',title:'Debate — Topic 02',desc:'Open discussion and Q&A on immunotherapeutic strategies.'},
+  {time:'12:30–13:30',type:'Lunch',icon:'🍽️',title:'Lunch Break',desc:'Lunch and networking opportunity.'},
+  {time:'13:30–14:30',type:'Session 3',icon:'⚗️',title:'Session 3 – Topic 03: Overcoming Resistance & Enhancing Efficacy',desc:'Resistance mechanisms, combination therapies, and strategies to improve patient outcomes.'},
+  {time:'14:30–15:30',type:'Session 4',icon:'💻',title:'Session 4 – Topic 04: Computational & Bioinformatics Approaches',desc:'AI, machine learning, single-cell analysis, and multi-omics in cancer immunology.',coming:true},
+  {time:'15:30–15:45',type:'Debate + Poster',icon:'📋',title:'Debate — Topics 03 & 04 + Poster Session (Parallel)',desc:'Open discussion and Q&A on resistance mechanisms and computational approaches. Poster presentations and oral communications displayed in parallel.'},
+  {time:'15:45–16:45',type:'Session 5',icon:'🚀',title:'Session 5 – Topic 05: From Science to Economic Enterprise',desc:'Patents, startups, technology transfer, and valorization of immunotherapy research.',coming:true},
+  {time:'16:45–17:10',type:'Round Table Q1',icon:'🔵',title:'Round Table — Question 01',desc:'What next after targeted therapy in cancer treatment? Curing cancer — is it possible?'},
+  {time:'17:10–17:30',type:'Round Table Q2',icon:'🔵',title:'Round Table — Question 02',desc:'Current state of cancer research in Algeria / Investing in startup projects: Trends and Opportunities.'},
+  {time:'17:30–18:00',type:'Closing',icon:'🏁',title:'Closing Ceremony',desc:'Summary, acknowledgments, and closing remarks.'}
+];
+
+const EMAIL = 'immuno.sciday26@gmail.com';
+
+// ── Seat state (0=available,1=occupied)
+let seatStates = Array(15).fill(0);
+let selectedSeat = null;
+let rtChairObjects = [];
+let rtSceneRef = null;
+let rtPivotRef = null;
+
+// ── Pod state
+let podSeats = [6,6,6,6,6];
+let currentPod = null;
+
+// ══════════════════════════════════════════════
+// NAV
+// ══════════════════════════════════════════════
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  document.querySelectorAll('.nav-links a').forEach(a=>{
+    a.classList.toggle('active', a.dataset.page===name);
+  });
+  document.getElementById('navLinks').classList.remove('open');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(name==='roundtable') setTimeout(initRoundTable,200);
+}
+function toggleNav(){
+  document.getElementById('navLinks').classList.toggle('open');
+}
+
+// ══════════════════════════════════════════════
+// HERO THREE.JS PARTICLES
+// ══════════════════════════════════════════════
+function initHeroCanvas(){
+  const canvas = document.getElementById('hero-canvas');
+  if(!canvas||typeof THREE==='undefined') return;
+  const renderer = new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75,canvas.clientWidth/canvas.clientHeight,0.1,1000);
+  camera.position.z = 80;
+
+  function resize(){
+    renderer.setSize(canvas.clientWidth,canvas.clientHeight,false);
+    camera.aspect=canvas.clientWidth/canvas.clientHeight;
+    camera.updateProjectionMatrix();
+  }
+  resize();
+  new ResizeObserver(resize).observe(canvas.parentElement);
+
+  // Particles
+  const geo = new THREE.BufferGeometry();
+  const count = 600;
+  const pos = new Float32Array(count*3);
+  const vel = new Float32Array(count*3);
+  for(let i=0;i<count*3;i++){
+    pos[i]=(Math.random()-0.5)*180;
+    vel[i]=(Math.random()-0.5)*0.04;
+  }
+  geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  const mat = new THREE.PointsMaterial({color:0xC9A84C,size:0.55,transparent:true,opacity:0.55});
+  const particles = new THREE.Points(geo,mat);
+  scene.add(particles);
+
+  // DNA-like lines
+  for(let s=0;s<4;s++){
+    const pts=[];
+    const offsetX=(Math.random()-0.5)*100;
+    const offsetZ=(Math.random()-0.5)*60;
+    for(let i=0;i<60;i++){
+      const t=i/60;
+      pts.push(new THREE.Vector3(offsetX+Math.sin(t*Math.PI*4)*8,t*100-50,offsetZ+Math.cos(t*Math.PI*4)*8));
+    }
+    const curve=new THREE.CatmullRomCurve3(pts);
+    const tubeGeo=new THREE.TubeGeometry(curve,60,0.12,6,false);
+    const tubeMat=new THREE.MeshBasicMaterial({color:0x00D4FF,transparent:true,opacity:0.18});
+    scene.add(new THREE.Mesh(tubeGeo,tubeMat));
+  }
+
+  let t=0;
+  function animate(){
+    requestAnimationFrame(animate);
+    t+=0.004;
+    particles.rotation.y=t*0.08;
+    particles.rotation.x=t*0.03;
+    const p=geo.attributes.position.array;
+    for(let i=0;i<count;i++){
+      p[i*3]+=vel[i*3];
+      p[i*3+1]+=vel[i*3+1];
+      p[i*3+2]+=vel[i*3+2];
+      if(Math.abs(p[i*3])>90)vel[i*3]*=-1;
+      if(Math.abs(p[i*3+1])>90)vel[i*3+1]*=-1;
+      if(Math.abs(p[i*3+2])>90)vel[i*3+2]*=-1;
+    }
+    geo.attributes.position.needsUpdate=true;
+    renderer.render(scene,camera);
+  }
+  animate();
+}
+
+// ══════════════════════════════════════════════
+// ROUND TABLE THREE.JS
+// ══════════════════════════════════════════════
+function initRoundTable(){
+  const canvas = document.getElementById('rt-canvas');
+  if(!canvas || typeof THREE==='undefined' || canvas._initialized) return;
+  canvas._initialized=true;
+
+  const renderer = new THREE.WebGLRenderer({canvas,antialias:true,alpha:false});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  renderer.shadowMap.enabled=true;
+  renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x060f1e);
+  scene.fog = new THREE.FogExp2(0x060f1e,0.018);
+
+  const camera = new THREE.PerspectiveCamera(50,canvas.clientWidth/canvas.clientHeight,0.1,200);
+  camera.position.set(0,22,30);
+  camera.lookAt(0,0,0);
+
+  function resize(){
+    const w=canvas.clientWidth,h=canvas.clientHeight;
+    renderer.setSize(w,h,false);
+    camera.aspect=w/h;
+    camera.updateProjectionMatrix();
+  }
+  resize();
+  new ResizeObserver(resize).observe(canvas);
+
+  scene.add(new THREE.AmbientLight(0x1a2f4a,1.2));
+  const spot=new THREE.SpotLight(0xffd080,2.5,80,Math.PI/5,.4,1.5);
+  spot.position.set(0,35,0);
+  spot.castShadow=true;
+  scene.add(spot);
+  const fl=new THREE.PointLight(0x00a8cc,1.2,60);
+  fl.position.set(-20,10,10);
+  scene.add(fl);
+  const fr=new THREE.PointLight(0x4466aa,.8,60);
+  fr.position.set(20,5,-10);
+  scene.add(fr);
+
+  const floor=new THREE.Mesh(new THREE.CircleGeometry(40,64),new THREE.MeshStandardMaterial({color:0x08121f,roughness:.95,metalness:.05}));
+  floor.rotation.x=-Math.PI/2;
+  floor.receiveShadow=true;
+  scene.add(floor);
+
+  const table=new THREE.Mesh(new THREE.CylinderGeometry(8,8,.6,64),new THREE.MeshStandardMaterial({color:0x0d2035,roughness:.2,metalness:.7}));
+  table.castShadow=true;
+  table.receiveShadow=true;
+  scene.add(table);
+
+  const rim=new THREE.Mesh(new THREE.TorusGeometry(8,.15,16,64),new THREE.MeshStandardMaterial({color:0xC9A84C,roughness:.3,metalness:.9}));
+  rim.rotation.x=Math.PI/2;
+  rim.position.y=.3;
+  scene.add(rim);
+
+  const tleg=new THREE.Mesh(new THREE.CylinderGeometry(.4,.6,1.2,16),new THREE.MeshStandardMaterial({color:0xC9A84C,roughness:.3,metalness:.95}));
+  tleg.position.y=-.9;
+  scene.add(tleg);
+
+  const gd=new THREE.Mesh(new THREE.CircleGeometry(7.8,64),new THREE.MeshBasicMaterial({color:0x0a1f38,transparent:true,opacity:.6}));
+  gd.rotation.x=-Math.PI/2;
+  gd.position.y=.31;
+  scene.add(gd);
+
+  const ptPos=new Float32Array(900);
+  for(let i=0;i<900;i++) ptPos[i]=(Math.random()-.5)*70;
+  const ptG=new THREE.BufferGeometry();
+  ptG.setAttribute('position',new THREE.BufferAttribute(ptPos,3));
+  scene.add(new THREE.Points(ptG,new THREE.PointsMaterial({color:0x1a4060,size:.18,transparent:true,opacity:.6})));
+
+  let pivot=new THREE.Group();
+  scene.children.slice().forEach(c=>{
+    if(c.type!=='AmbientLight'&&c.type!=='SpotLight'&&c.type!=='PointLight') pivot.add(c);
+  });
+  scene.add(pivot);
+  rtPivotRef=pivot;
+  rtSceneRef=scene;
+
+  const NUM_SEATS=15;
+  rtChairObjects=[];
+
+  function buildChair(index){
+    const angle=(index/NUM_SEATS)*Math.PI*2-Math.PI/2;
+    const SR=13.5;
+    const x=Math.cos(angle)*SR,z=Math.sin(angle)*SR;
+    const group=new THREE.Group();
+    group.position.set(x,0,z);
+    group.rotation.y=-angle+Math.PI/2;
+
+    const isOccupied=seatStates[index]===1;
+    const seatColor=isOccupied?0x441111:0x1a3a5c;
+    const frameColor=isOccupied?0x552222:0x8c7340;
+    const glowColor=isOccupied?0xff2222:0x00ff88;
+
+    const mSeat=new THREE.MeshStandardMaterial({color:seatColor,roughness:.45,metalness:.1});
+    const mFrame=new THREE.MeshStandardMaterial({color:frameColor,roughness:.2,metalness:.95});
+
+    const seat=new THREE.Mesh(new THREE.BoxGeometry(1.8,.22,1.6),mSeat);
+    seat.position.y=1;
+    seat.castShadow=true;
+    group.add(seat);
+
+    const back=new THREE.Mesh(new THREE.BoxGeometry(1.8,1.4,.18),mSeat);
+    back.position.set(0,1.82,-.71);
+    back.castShadow=true;
+    group.add(back);
+
+    const legGeoC=new THREE.CylinderGeometry(.055,.07,1.1,8);
+    [[-0.78,-.62],[.78,-.62],[-.78,.62],[.78,.62]].forEach(([lx,lz])=>{
+      const l=new THREE.Mesh(legGeoC,mFrame);
+      l.position.set(lx,.45,lz);
+      group.add(l);
+    });
+
+    [-.7,.7].forEach(bx=>{
+      const u=new THREE.Mesh(new THREE.CylinderGeometry(.045,.045,1.6,8),mFrame);
+      u.position.set(bx,1.6,-.71);
+      group.add(u);
+    });
+
+    const glow=new THREE.Mesh(new THREE.SphereGeometry(.18,12,12),new THREE.MeshBasicMaterial({color:glowColor,transparent:true,opacity:isOccupied?.35:.9}));
+    glow.position.set(0,2.5,-.71);
+    group.add(glow);
+
+    const ld=new THREE.Mesh(new THREE.CircleGeometry(.22,20),new THREE.MeshBasicMaterial({color:glowColor,transparent:true,opacity:.5}));
+    ld.position.set(0,1.12,0);
+    ld.rotation.x=-Math.PI/2;
+    group.add(ld);
+
+    group.userData={seatIndex:index,isOccupied};
+    pivot.add(group);
+    rtChairObjects.push(group);
+  }
+
+  for(let i=0;i<NUM_SEATS;i++) buildChair(i);
+
+  let isDragging=false,prevMouse={x:0,y:0},rotX=0.3,rotY=0,zoom=30;
+  let clickStart={x:0,y:0},clickMoved=false;
+
+  canvas.addEventListener('mousedown',e=>{
+    clickStart={x:e.clientX,y:e.clientY};
+    clickMoved=false;
+    prevMouse={x:e.clientX,y:e.clientY};
+  });
+  canvas.addEventListener('mousemove',e=>{
+    const dx=e.clientX-prevMouse.x,dy=e.clientY-prevMouse.y;
+    if(e.buttons===1){
+      if(Math.abs(e.clientX-clickStart.x)>4||Math.abs(e.clientY-clickStart.y)>4) clickMoved=true;
+      rotY+=dx*.008;
+      rotX+=dy*.005;
+      rotX=Math.max(-.5,Math.min(1.2,rotX));
+    }
+    prevMouse={x:e.clientX,y:e.clientY};
+  });
+  canvas.addEventListener('wheel',e=>{zoom+=e.deltaY*.05;zoom=Math.max(18,Math.min(55,zoom));},{passive:true});
+
+  let lastTouch=null;
+  canvas.addEventListener('touchstart',e=>{lastTouch={x:e.touches[0].clientX,y:e.touches[0].clientY};clickMoved=false;},{passive:true});
+  canvas.addEventListener('touchmove',e=>{
+    if(!lastTouch)return;
+    const dx=e.touches[0].clientX-lastTouch.x,dy=e.touches[0].clientY-lastTouch.y;
+    if(Math.abs(dx)>4||Math.abs(dy)>4) clickMoved=true;
+    rotY+=dx*.008;
+    rotX+=dy*.005;
+    rotX=Math.max(-.5,Math.min(1.2,rotX));
+    lastTouch={x:e.touches[0].clientX,y:e.touches[0].clientY};
+  },{passive:true});
+  canvas.addEventListener('touchend',e=>{
+    if(!clickMoved&&lastTouch){
+      const rect=canvas.getBoundingClientRect(),t=e.changedTouches[0];
+      doRaycast(((t.clientX-rect.left)/rect.width)*2-1,-((t.clientY-rect.top)/rect.height)*2+1);
+    }
+    lastTouch=null;
+  },{passive:true});
+
+  const raycaster=new THREE.Raycaster();
+  canvas.addEventListener('click',e=>{
+    if(clickMoved)return;
+    const rect=canvas.getBoundingClientRect();
+    doRaycast(((e.clientX-rect.left)/rect.width)*2-1,-((e.clientY-rect.top)/rect.height)*2+1);
+  });
+
+  function doRaycast(mx,my){
+    raycaster.setFromCamera({x:mx,y:my},camera);
+    const hits=raycaster.intersectObjects(rtChairObjects,true);
+    if(!hits.length)return;
+    let obj=hits[0].object;
+    for(let i=0;i<8;i++){
+      if(obj.userData.seatIndex!==undefined)break;
+      if(obj.parent)obj=obj.parent;else break;
+    }
+    if(obj.userData.seatIndex===undefined)return;
+    if(obj.userData.isOccupied){showToast('Seat #'+(obj.userData.seatIndex+1)+' is already occupied.');return;}
+    openRTModal(obj.userData.seatIndex+1);
+  }
+
+  (function loop(){
+    requestAnimationFrame(loop);
+    pivot.rotation.y=rotY;
+    pivot.rotation.x=rotX;
+    camera.position.z=zoom;
+    camera.lookAt(0,0,0);
+    renderer.render(scene,camera);
+  })();
+}
+
+function rebuildRoundTableChairs(){
+  if(!rtPivotRef || !rtSceneRef) return;
+  rtChairObjects.forEach(g=>rtPivotRef.remove(g));
+  rtChairObjects=[];
+  const NUM_SEATS=15;
+  function buildChair(index){
+    const angle=(index/NUM_SEATS)*Math.PI*2-Math.PI/2;
+    const SR=13.5;
+    const x=Math.cos(angle)*SR,z=Math.sin(angle)*SR;
+    const group=new THREE.Group();
+    group.position.set(x,0,z);
+    group.rotation.y=-angle+Math.PI/2;
+    const isOccupied=seatStates[index]===1;
+    const seatColor=isOccupied?0x441111:0x1a3a5c;
+    const frameColor=isOccupied?0x552222:0x8c7340;
+    const glowColor=isOccupied?0xff2222:0x00ff88;
+    const mSeat=new THREE.MeshStandardMaterial({color:seatColor,roughness:.45,metalness:.1});
+    const mFrame=new THREE.MeshStandardMaterial({color:frameColor,roughness:.2,metalness:.95});
+    const seat=new THREE.Mesh(new THREE.BoxGeometry(1.8,.22,1.6),mSeat);
+    seat.position.y=1;
+    group.add(seat);
+    const back=new THREE.Mesh(new THREE.BoxGeometry(1.8,1.4,.18),mSeat);
+    back.position.set(0,1.82,-.71);
+    group.add(back);
+    const legGeoC=new THREE.CylinderGeometry(.055,.07,1.1,8);
+    [[-0.78,-.62],[.78,-.62],[-.78,.62],[.78,.62]].forEach(([lx,lz])=>{
+      const l=new THREE.Mesh(legGeoC,mFrame);
+      l.position.set(lx,.45,lz);
+      group.add(l);
+    });
+    [-.7,.7].forEach(bx=>{
+      const u=new THREE.Mesh(new THREE.CylinderGeometry(.045,.045,1.6,8),mFrame);
+      u.position.set(bx,1.6,-.71);
+      group.add(u);
+    });
+    const glow=new THREE.Mesh(new THREE.SphereGeometry(.18,12,12),new THREE.MeshBasicMaterial({color:glowColor,transparent:true,opacity:isOccupied?.35:.9}));
+    glow.position.set(0,2.5,-.71);
+    group.add(glow);
+    const ld=new THREE.Mesh(new THREE.CircleGeometry(.22,20),new THREE.MeshBasicMaterial({color:glowColor,transparent:true,opacity:.5}));
+    ld.position.set(0,1.12,0);
+    ld.rotation.x=-Math.PI/2;
+    group.add(ld);
+    group.userData={seatIndex:index,isOccupied};
+    rtPivotRef.add(group);
+    rtChairObjects.push(group);
+  }
+  for(let i=0;i<NUM_SEATS;i++) buildChair(i);
+}
+
+// ══════════════════════════════════════════════
+// RENDER TOPICS
+// ══════════════════════════════════════════════
+function renderTopicCards(containerId, extended=false){
+  const el=document.getElementById(containerId);
+  if(!el) return;
+  el.innerHTML=TOPICS.map(t=>`
+    <div class="topic-card">
+      <div class="topic-num">${t.num}</div>
+      <h3>${t.title}</h3>
+      <p>${t.desc}</p>
+      <a class="learn-more" href="#" onclick="showPage('topics')">Learn more →</a>
+    </div>
+  `).join('');
+}
+
+function renderTopicsPage(){
+  const el=document.getElementById('topicsGrid');
+  if(!el) return;
+  el.innerHTML=TOPICS.map(t=>`
+    <div class="topic-card" style="padding:2rem;">
+      <div class="topic-num" style="font-size:3rem;">${t.num}</div>
+      <h3 style="font-size:1.1rem;margin-bottom:0.75rem;">${t.title}</h3>
+      <p>${t.desc}</p>
+      <a class="learn-more" href="#" onclick="showPage('program')">View in Program →</a>
+    </div>
+  `).join('');
+}
+
+// ══════════════════════════════════════════════
+// RENDER PROGRAM
+// ══════════════════════════════════════════════
+function renderProgram(){
+  const el=document.getElementById('programTimeline');
+  if(!el) return;
+  el.innerHTML=PROGRAM.map(p=>`
+    <div class="tl-item">
+      <div class="tl-time">${p.time}</div>
+      <div class="tl-body">
+        <div class="tl-type">${p.icon} ${p.type}</div>
+        <h3>${p.title}</h3>
+        ${p.desc?`<p>${p.desc}</p>`:''}
+        ${p.coming?`<span class="tl-coming">Coming Soon</span>`:''}
+      </div>
+    </div>
+  `).join('');
+}
+
+// ══════════════════════════════════════════════
+// RENDER HONORARY
+// ══════════════════════════════════════════════
+const PRESIDENTS=[
+  {name:'Pr. Elaid DEHIMET',affil:'University Constantine 1'},
+  {name:'Pr. Mohamed Elarbi REZGOUNE',affil:'University Constantine 1'},
+  {name:'Pr. Sakina ZERIZER',affil:'University Constantine 1'}
+];
+const GUESTS=[
+  {name:'Pr. Abdelkader ROUABEH',affil:'University Constantine 1'},
+  {name:'Dr. Mohamed Larbi MEDJROUBI',affil:'University Constantine 1'},
+  {name:'Dr. Esma BAKIRI',affil:'University Constantine 1'},
+  {name:'Dr. Mohamed BENDJABALLAH',affil:'University Constantine 1'},
+  {name:'Dr. Mohamed Badreddine Mokhtari',affil:'University Constantine 1'},
+  {name:'Dr. Sakina BECHKRI',affil:'University Constantine 1'},
+  {name:'Pr. Djalila CHELLAT',affil:'University Constantine 1'},
+  {name:'Dr. Soufiane HAROUNI',affil:'University Constantine 1'}
+];
+function buildHonorList(data){
+  return data.map(p=>`<li><span class="dot"></span><div><strong>${p.name}</strong><span>${p.affil}</span></div></li>`).join('');
+}
+function renderHonorary(containerId){
+  const el=document.getElementById(containerId);
+  if(!el) return;
+  el.innerHTML=`
+    <div class="honor-block">
+      <h3>Distinguished Honorary Presidents</h3>
+      <ul class="honor-list">${buildHonorList(PRESIDENTS)}</ul>
+    </div>
+    <div class="honor-block">
+      <h3>Distinguished Honorary Guests</h3>
+      <ul class="honor-list">${buildHonorList(GUESTS)}</ul>
+    </div>
+  `;
+}
+
+// ══════════════════════════════════════════════
+// ROUND TABLE MODAL
+// ══════════════════════════════════════════════
+function openRTModal(seatNum){
+  const now=new Date();
+  const deadline=new Date('2026-05-15T23:59:00+01:00');
+  if(now>deadline){
+    showToast('Reservation is closed (closed May 20, 2026).','error');return;
+  }
+  selectedSeat=seatNum;
+  document.getElementById('rtModalTitle').textContent=`Reserve Seat #${seatNum}`;
+  document.getElementById('rtSuccess').style.display='none';
+  document.getElementById('rtModal').classList.add('open');
+}
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwnwzhAt4cvSQD7UYsCiuIDnTJkucyAf_U_RaGf6SeGj3HOhCLO8_DoQonsupuXxc8w/exec";
+
+async function loadReservedSeats() {
+
+  try {
+
+    const response = await fetch(SCRIPT_URL);
+
+    const data = await response.json();
+
+    console.log("Reserved seats:", data);
+
+    if(data.seats && Array.isArray(data.seats)){
+
+      data.seats.forEach(seat => {
+
+        const seatIndex = parseInt(seat) - 1;
+
+        if(seatIndex >= 0 && seatIndex < seatStates.length){
+
+          seatStates[seatIndex] = 1;
+        }
+      });
+
+      // UPDATE 3D TABLE
+      rebuildRoundTableChairs();
+
+      // UPDATE COUNTER
+      const left = seatStates.filter(s => s === 0).length;
+
+      const seatsLeftEl = document.getElementById('seatsLeft');
+
+      if(seatsLeftEl){
+
+        seatsLeftEl.textContent = left;
+      }
+    }
+
+  } catch(error){
+
+    console.error("Error loading reserved seats:", error);
+  }
+}
+async function submitRTReservation(){
+
+  const name = document.getElementById('rtName').value.trim();
+  const affil = document.getElementById('rtAffil').value.trim();
+  const bio = document.getElementById('rtBio').value.trim();
+  const confirm = document.getElementById('rtConfirm').checked;
+
+  if(!name){
+    showToast('Please enter your name.','error');
+    return;
+  }
+
+  if(!confirm){
+    showToast('Please confirm your reservation.','error');
+    return;
+  }
+
+  try {
+
+    const response = await fetch(SCRIPT_URL, {
+      method: "POST",
+      body: JSON.stringify({
+        seat: selectedSeat,
+        name: name,
+        affiliation: affil,
+        bio: bio
+      })
+    });
+
+    const result = await response.json();
+    if(result.result === "taken"){
+
+      showToast(`Seat #${selectedSeat} is already reserved.`, 'error');
+
+      return;
+
+    }
+    if(result.result === "success"){
+
+      seatStates[selectedSeat-1] = 1;
+      rebuildRoundTableChairs();
+
+      const left = seatStates.filter(s => s === 0).length;
+
+      document.getElementById('seatsLeft').textContent = left;
+      // CLEAR FORM
+      document.getElementById('rtName').value = '';
+      document.getElementById('rtAffil').value = '';
+      document.getElementById('rtBio').value = '';
+      document.getElementById('rtConfirm').checked = false;
+      
+      const msg = document.getElementById('rtSuccess');
+
+      msg.textContent =
+        `Your reservation for Seat #${selectedSeat} has been submitted successfully.`;
+
+      msg.style.display = 'block';
+
+      showToast(`Seat #${selectedSeat} reserved successfully!`, 'success');
+
+      setTimeout(() => closeModal('rtModal'), 3500);
+
+    } else {
+
+      showToast('Submission failed.','error');
+
+    }
+
+  } catch(error){
+
+    console.error(error);
+
+    showToast('Connection error.','error');
+
+  }
+}
+
+// ══════════════════════════════════════════════
+// QUESTION FORM
+// ══════════════════════════════════════════════
+function renderQuestionForm(){
+  const el=document.getElementById('qFormContent');
+  if(!el) return;
+  const now=new Date();
+  const open=new Date('2026-06-09T10:00:00+01:00');
+  const close=new Date('2026-06-09T13:00:00+01:00');
+  if(now<open||now>close){
+    el.innerHTML=`<div class="form-closed">Question submission is closed. It will be open on June 9, 2026 from 10:00 to 13:00 (Algeria Time).</div>`;
+    return;
+  }
+  el.innerHTML=`
+    <div class="form-row">
+      <div class="form-group"><label>Full Name</label><input type="text" id="qName" placeholder="Your Name"/></div>
+      <div class="form-group"><label>Affiliation</label><input type="text" id="qAffil" placeholder="University / Institution"/></div>
+    </div>
+    <div class="form-group">
+      <label>Related Topic</label>
+      <select id="qTopic">
+        <option>What next after targeted therapy? Curing cancer — is it possible?</option>
+        <option>Current state of cancer research in Algeria / Investing in startup projects: Trends and Opportunities.</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Your Question</label><textarea id="qQuestion" placeholder="Type your question here..."></textarea></div>
+    <button class="btn btn-primary" onclick="submitQuestion()">Submit Question</button>
+    <div class="success-msg" id="qSuccess">✅ Question submitted!</div>
+  `;
+}
+function submitQuestion(){
+  const name=document.getElementById('qName').value.trim();
+  const affil=document.getElementById('qAffil').value.trim();
+  const topic=document.getElementById('qTopic').value;
+  const question=document.getElementById('qQuestion').value.trim();
+  if(!name||!question){showToast('Please fill required fields.','error');return;}
+  const body=encodeURIComponent(`Round Table Question Submission\n\nName: ${name}\nAffiliation: ${affil}\nTopic: ${topic}\nQuestion: ${question}`);
+  const subject=encodeURIComponent(`[SciDay2026] Question Submission – ${name}`);
+  window.open(`mailto:${EMAIL}?subject=${subject}&body=${body}`,'_blank');
+  document.getElementById('qSuccess').style.display='block';
+  showToast('Question submitted!','success');
+}
+
+// ══════════════════════════════════════════════
+// GENERAL REGISTRATION
+// ══════════════════════════════════════════════
+function togglePosterFields(){
+  const show=document.getElementById('grPoster').checked;
+  document.getElementById('posterFields').style.display=show?'block':'none';
+}
+function submitGenReg() {
+
+  const data = {
+    fullName: document.getElementById("grName").value,
+    email: document.getElementById("grEmail").value,
+    affiliation: document.getElementById("grAffil").value,
+    registrationType: document.getElementById("grType").value,
+    poster: document.getElementById("grPoster").checked ? "Yes" : "No",
+    submissionType: document.getElementById("subType")?.value || "",
+    submissionTitle: document.getElementById("subTitle")?.value || ""
+  };
+
+  const url = "https://script.google.com/macros/s/AKfycbzA-xno_feVxrgcdt1f-u2HFu6UM_wMhwPRrB8aAqdqEFlsta2hRaahdbC4yeRC-Z8zjA/exec";
+
+  fetch(url, {
+    method: "POST",
+    body: new URLSearchParams(data)
+  })
+  .then(res => res.json())
+  .then(response => {
+    document.getElementById("genRegSuccess").style.display = "block";
+    showToast('Registration submitted!','success');
+  })
+  .catch(error => {
+    console.error(error);
+    showToast('Error submitting form','error');
+  });
+}
+
+
+// ══════════════════════════════════════════════
+// CONTACT
+// ══════════════════════════════════════════════
+function submitContact(){
+  const name=document.getElementById('ctName').value.trim();
+  const email=document.getElementById('ctEmail').value.trim();
+  const msg=document.getElementById('ctMsg').value.trim();
+  if(!name||!email||!msg){showToast('Please fill all fields.','error');return;}
+  const body=encodeURIComponent(`Contact Message\n\nFrom: ${name}\nEmail: ${email}\nMessage:\n${msg}`);
+  const subject=encodeURIComponent(`[SciDay2026] Contact – ${name}`);
+  window.open(`mailto:${EMAIL}?subject=${subject}&body=${body}`,'_blank');
+  document.getElementById('contactSuccess').style.display='block';
+  showToast('Message sent!','success');
+}
+
+// ══════════════════════════════════════════════
+// WORKSHOP
+// ══════════════════════════════════════════════
+function renderPods(){
+  const el=document.getElementById('podsGrid');
+  if(!el) return;
+  const now=new Date();
+  const close=new Date('2026-06-07T23:59:00+01:00');
+  el.innerHTML=podSeats.map((seats,i)=>{
+    const full=seats===0;
+    const statusClass=full?'full':'available';
+    const statusTxt=full?'Full':(seats===6?'Available':`${seats} seats left`);
+    const closed=now>close;
+    return `
+      <div class="pod-card${full?' full':''}" onclick="${full||closed?'':(`openWsModal(${i+1})`)}">
+        ${!full&&!closed?`<div class="pod-pulse"></div>`:''}
+        <div class="pod-num">Pod ${i+1}</div>
+        <div class="pod-seats">${seats}/6 seats available</div>
+        <span class="pod-status ${statusClass}">${closed?'Closed':statusTxt}</span>
+        ${full?`<p style="color:#E05555;font-size:0.78rem;margin-top:0.5rem;">🔒 Full — <a href="#" style="color:#E05555;" onclick="openWaitList(${i+1})">Join Waitlist</a></p>`:''}
+      </div>
+    `;
+  }).join('');
+}
+let currentWsPod=null;
+function openWsModal(podNum){
+  const now=new Date();
+  const close=new Date('2026-06-07T23:59:00+01:00');
+  if(now>close){showToast('Workshop booking is closed.','error');return;}
+  currentWsPod=podNum;
+  document.getElementById('wsModalTitle').textContent=`Secure Your Seat – Pod ${podNum} (June 9, 14:00–14:30)`;
+  document.getElementById('wsSuccess').style.display='none';
+  document.getElementById('wsModal').classList.add('open');
+}
+function openWaitList(podNum){
+  const name=prompt('Your name (Waitlist):');
+  const email=prompt('Your email:');
+  if(!name||!email) return;
+  const body=encodeURIComponent(`WAITING LIST\n\nPod: ${podNum}\nName: ${name}\nEmail: ${email}`);
+  const subject=encodeURIComponent(`WAITING LIST – AI Workshop Pod ${podNum}`);
+  window.open(`mailto:${EMAIL}?subject=${subject}&body=${body}`,'_blank');
+  showToast(`Added to waitlist for Pod ${podNum}!`,'success');
+}
+function updateCharCount(){
+  const val=document.getElementById('wsMotiv').value.length;
+  document.getElementById('motCharCount').textContent=`(${val}/150)`;
+}
+function submitWorkshop(){
+  const name=document.getElementById('wsName').value.trim();
+  const email=document.getElementById('wsEmail').value.trim();
+  const laptop=document.getElementById('wsLaptop').checked;
+  if(!name||!email){showToast('Please fill required fields.','error');return;}
+  if(!laptop){showToast('Please confirm laptop requirement.','error');return;}
+  const body=encodeURIComponent(`AI Workshop Booking\n\nPod: ${currentWsPod}\nFull Name: ${name}\nEmail: ${email}\nAffiliation: ${document.getElementById('wsAffil').value}\nExperience: ${document.getElementById('wsExp').value}\nOS: ${document.getElementById('wsOS').value}\nMotivation: ${document.getElementById('wsMotiv').value}`);
+  const subject=encodeURIComponent(`[SciDay2026] AI Workshop Booking – Pod ${currentWsPod} – ${name}`);
+  window.open(`mailto:${EMAIL}?subject=${subject}&body=${body}`,'_blank');
+  if(podSeats[currentWsPod-1]>0) podSeats[currentWsPod-1]--;
+  renderPods();
+  const msg=document.getElementById('wsSuccess');
+  msg.textContent="You've secured a spot in the AI Lab Workshop for June 9, 14:00–14:30. A confirmation email will follow. Please check your spam folder.";
+  msg.style.display='block';
+  setTimeout(()=>closeModal('wsModal'),4000);
+  showToast('Lab seat confirmed! Check your email.','success');
+}
+
+// ══════════════════════════════════════════════
+// ACCORDION
+// ══════════════════════════════════════════════
+function toggleAcc(header){
+  header.classList.toggle('open');
+  const body=header.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+// ══════════════════════════════════════════════
+// COUNTDOWN
+// ══════════════════════════════════════════════
+function updateCountdown(){
+  const target=new Date('2026-06-09T14:00:00+01:00');
+  const now=new Date();
+  const diff=target-now;
+  if(diff<=0){
+    document.getElementById('workshopCountdown').innerHTML='<span style="color:var(--cyan);font-family:Rajdhani,sans-serif;font-size:1.3rem;">Workshop has started!</span>';
+    return;
+  }
+  const d=Math.floor(diff/86400000);
+  const h=Math.floor((diff%86400000)/3600000);
+  const m=Math.floor((diff%3600000)/60000);
+  const s=Math.floor((diff%60000)/1000);
+  document.getElementById('cdDays').textContent=String(d).padStart(2,'0');
+  document.getElementById('cdHours').textContent=String(h).padStart(2,'0');
+  document.getElementById('cdMins').textContent=String(m).padStart(2,'0');
+  document.getElementById('cdSecs').textContent=String(s).padStart(2,'0');
+}
+
+// ══════════════════════════════════════════════
+// AI DEMO
+// ══════════════════════════════════════════════
+function runDemoInference(type){
+  if(!type) type=['benign','malignant','uncertain'][Math.floor(Math.random()*3)];
+  const prog=document.getElementById('demoProgress');
+  const res=document.getElementById('predResult');
+  prog.style.display='block';
+  res.style.display='none';
+  const bars=[document.getElementById('pb1'),document.getElementById('pb2'),document.getElementById('pb3')];
+  bars.forEach(b=>b.style.width='0');
+  let step=0;
+  function nextStep(){
+    if(step<3){
+      bars[step].style.width='100%';
+      step++;
+      setTimeout(nextStep,600);
+    } else {
+      const outcomes={
+        benign:{label:'Benign',conf:'96.8%',color:'#3EC97B'},
+        malignant:{label:'Malignant',conf:'91.3%',color:'#E05555'},
+        uncertain:{label:'Indeterminate',conf:'57.2%',color:'#E6C97B'}
+      };
+      const o=outcomes[type];
+      document.getElementById('predLabel').textContent=o.label;
+      document.getElementById('predLabel').style.color=o.color;
+      document.getElementById('predConf').textContent=`Confidence: ${o.conf}`;
+      res.style.display='block';
+    }
+  }
+  nextStep();
+}
+
+// ══════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════
+function showToast(msg,type='success'){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.className='show '+type;
+  setTimeout(()=>t.className='',3500);
+}
+
+// ══════════════════════════════════════════════
+// MODAL CLOSE
+// ══════════════════════════════════════════════
+function closeModal(id){
+  document.getElementById(id).classList.remove('open');
+}
+document.querySelectorAll('.modal-overlay').forEach(m=>{
+  m.addEventListener('click',e=>{ if(e.target===m) m.classList.remove('open'); });
+});
+
+// ══════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', async ()=>{
+  renderTopicCards('homeTopicsGrid');
+  renderTopicCards('aboutTopicsGrid');
+  renderTopicsPage();
+  renderProgram();
+  renderHonorary('honorGrid');
+  renderHonorary('speakerHonorGrid');
+  renderQuestionForm();
+  renderPods();
+  await loadReservedSeats();
+  initHeroCanvas();
+  setInterval(updateCountdown,1000);
+  updateCountdown();
+});
+</script>
+</body>
+</html>
