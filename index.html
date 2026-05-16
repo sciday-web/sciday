@@ -1612,7 +1612,7 @@ function renderHonorary(containerId){
 // ══════════════════════════════════════════════
 function openRTModal(seatNum){
   const now=new Date();
-  const deadline=new Date('2026-05-15T23:59:00+01:00');
+  const deadline=new Date('2026-05-20T23:59:00+01:00');
   if(now>deadline){
     showToast('Reservation is closed (closed May 20, 2026).','error');return;
   }
